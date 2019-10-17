@@ -9,17 +9,15 @@
 
 </head>
 <body onload="init()">
-        <div id="root">
-            <div class="container">
-                <p id="score">0</p>
-                <p id="hscore">0</p>
-                <canvas id="c" width="510px" height="345px"></canvas>
-                <div class="gameOver">
-                    <h1>Game Over</h1><br>
-                    <button onclick="reiniciar()">Reiniciar</button>
-                </div>
-            </div>
+    <div class="container">
+        <canvas id="c" width="510px" height="345px"></canvas>
+        <p id="score">0</p>
+        <p id="hscore">0</p>
+        <div class="gameOver">
+            <h1>Game Over</h1><br>
+            <button onclick="reiniciar()">Reiniciar</button>
         </div>
+    </div>
 
     <script>
         var c = document.getElementById('c')
@@ -78,7 +76,6 @@
         }
 
         function loop(){
-            //alert(c.width + '; ' + c.height)
             ctx.clearRect(0, 0, c.width, c.height)
             
             comeu()
