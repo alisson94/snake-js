@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>SnakeJS</title>
-    <meta name='viewport' content='width=device-width, user-scalable=no'>
+    <meta name='viewport' content='width=514px, user-scalable=no'>
     <link rel="stylesheet" href="style.css">
 
 </head>
+
 <body onload="init()">
     <div class="container">
         <div class="header">
@@ -15,10 +17,18 @@
             <p id="hscore">0</p>
         </div>
         <canvas id="c" width="510px" height="345px"></canvas>
-        <div class="gameOver">
-            <h1>Game Over</h1><br>
-            <button onclick="reiniciar()">Reiniciar</button>
+
+        <div class="buttonsContainer">
+            <div id="button1" class="button" onclick="apertouBotaoVirtual('38')"></div>
+            <div id="button2" class="button" onclick="apertouBotaoVirtual('37')"></div>
+            <div id="button3" class="button" onclick="apertouBotaoVirtual('39')"></div>
+            <div id="button4" class="button" onclick="apertouBotaoVirtual('40')"></div>
         </div>
+    </div>
+
+    <div class="gameOver">
+        <h1>Game Over</h1><br>
+        <button onclick="reiniciar()">Reiniciar</button>
     </div>
 
     <script>
@@ -26,7 +36,7 @@
         var ctx = c.getContext('2d')
         var intervalo = setInterval(loop, 60)
         addEventListener('keydown', apertou)
-        
+
         var comidaX
         var comidaY
 
@@ -41,45 +51,52 @@
             s = []
             tamanho = 15
             direcao = 'direita'
-            for(var i=0; i < 3; i++){
+            for (var i = 0; i < 3; i++) {
                 s[i] = {
-                    x : 105 - i * tamanho,
-                    y : 105,
+                    x: 105 - i * tamanho,
+                    y: 105,
                     direcao: 'direita'
                 }
             }
         }
-    
+
         function apertou(e) {
-            switch (e.keyCode) {
-                case 38:  //87
-                    if(s[0].direcao != 'baixo'){
-                        s[0].direcao = 'cima'
-                    }
-                    break
-                case 40:  //83
-                    if(s[0].direcao != 'cima'){
-                        s[0].direcao = 'baixo'
-                    }
-                    break
-                case 39:  //68
-                    if(s[0].direcao != 'esquerda'){
-                        s[0].direcao = 'direita'
-                    }
-                    break
-                case 37:  //65
-                    if(s[0].direcao != 'direita'){
-                        s[0].direcao = 'esquerda'
-                    }
-                    break  
-                case 80:
-                    clearInterval(intervalo)
+
+            if (e.keyCode == 38 || e.keyCode == 87) {
+                if (s[0].direcao != 'baixo') {
+                    s[0].direcao = 'cima'
+                }
+
+            } else if (e.keyCode == 40 || e.keyCode == 83) {
+                if (s[0].direcao != 'cima') {
+                    s[0].direcao = 'baixo'
+                }
+
+            } else if (e.keyCode == 39 || e.keyCode == 68) {
+                if (s[0].direcao != 'esquerda') {
+                    s[0].direcao = 'direita'
+                }
+
+            } else if (e.keyCode == 37 || e.keyCode == 65) {
+                if (s[0].direcao != 'direita') {
+                    s[0].direcao = 'esquerda'
+                }
+
+            } else if (e.keyCode == 80) {
+                clearInterval(intervalo)
+
             }
         }
 
-        function loop(){
+        function apertouBotaoVirtual(code) {
+            apertou({
+                keyCode: parseInt(code)
+            })
+        }
+
+        function loop() {
             ctx.clearRect(0, 0, c.width, c.height)
-            
+
             comeu()
             mover()
             seMordeu()
@@ -88,7 +105,7 @@
             ctx.fillRect(comidaX, comidaY, tamanho, tamanho);
 
             ctx.fillStyle = 'black'
-            for(var i in s){
+            for (var i in s) {
                 ctx.fillRect(s[i].x, s[i].y, tamanho, tamanho)
             }
 
@@ -99,69 +116,69 @@
             ctx.fillText(comidaY, 10, c.height - 5)
         }
 
-        function mover(){
-            for(var i = s.length-1; i >= 0; i--){
-                if(i != 0){
-                    s[i].x = s[i-1].x
-                    s[i].y = s[i-1].y
-                }else{
+        function mover() {
+            for (var i = s.length - 1; i >= 0; i--) {
+                if (i != 0) {
+                    s[i].x = s[i - 1].x
+                    s[i].y = s[i - 1].y
+                } else {
                     switch (s[i].direcao) {
                         case 'cima':
-                            if(s[i].y > 0){
+                            if (s[i].y > 0) {
                                 s[i].y -= tamanho
-                            }else{
+                            } else {
                                 gameOver()
                             }
                             break
                         case 'baixo':
-                            if(s[i].y + tamanho < c.height){
+                            if (s[i].y + tamanho < c.height) {
                                 s[i].y += tamanho
-                            }else{
+                            } else {
                                 gameOver()
                             }
                             break
                         case 'direita':
-                            if(s[i].x + tamanho < c.width){
+                            if (s[i].x + tamanho < c.width) {
                                 s[i].x += tamanho
-                            }else{
+                            } else {
                                 gameOver()
                             }
-                            
+
                             break
                         case 'esquerda':
-                            if(s[i].x > 0){
+                            if (s[i].x > 0) {
                                 s[i].x -= tamanho
-                            }else{
+                            } else {
                                 gameOver()
                             }
-                            break  
-                    } 
+                            break
+                    }
                 }
             }
         }
 
         function comeu() {
-            if(s[0].x == comidaX && s[0].y == comidaY){
+            if (s[0].x == comidaX && s[0].y == comidaY) {
                 comidaX = Math.floor(Math.random() * 33) * 15
                 comidaY = Math.floor(Math.random() * 22) * 15
                 aumentarPontuacao();
 
-                var ultimo = s[s.length-1]
-                
+                var ultimo = s[s.length - 1]
+
                 s.push({
-                    x : ultimo.x,
-                    y : ultimo.y
-                    
+                    x: ultimo.x,
+                    y: ultimo.y
+
                 })
             }
         }
 
-        function seMordeu(){
+        function seMordeu() {
             for (let i = 1; i < s.length; i++) {
-                if(s[0].x == s[i].x && s[0].y == s[i].y){
+                if (s[0].x == s[i].x && s[0].y == s[i].y) {
                     gameOver()
                 }
-                
+
             }
         }
 
@@ -169,14 +186,14 @@
             var p = document.querySelector('p#score')
             var mp = document.querySelector('p#hscore')
             p.innerText = parseInt(p.innerText) + 10
-            if(parseInt(p.innerText) > parseInt(mp.innerText)){
+            if (parseInt(p.innerText) > parseInt(mp.innerText)) {
                 mp.innerText = p.innerText
             }
 
         }
 
         function gameOver() {
-            
+
             tamanho = 0
             document.querySelector('div.gameOver').style.opacity = 1
         }
@@ -185,7 +202,8 @@
             document.querySelector('p#score').innerText = 0
             document.querySelector('div.gameOver').style.opacity = 0
         }
-        
+
     </script>
 </body>
+
 </html>
