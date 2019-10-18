@@ -1,12 +1,29 @@
-canvas{
-    border: 1px solid black;
+*{
+    margin: 0;
+    padding: 0;
+    outline: 0;
+}
+
+div.container{
     top: 0%;
     bottom: 0%;
     left: 0%;
     right: 0%;
     margin: auto;
     position: absolute;
+    width: 510px;
 }
+
+canvas{
+    border: 1px solid black;
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    font: bold 15pt Arial;
+}
+
 div.gameOver{
     font: normal 15pt Arial;
     position: absolute;
@@ -15,15 +32,4 @@ div.gameOver{
     background: white;
     left: 30%;
     opacity: 0;
-}
-p{
-    position: absolute;
-    font: normal 15pt Arial;
-    top: 100px;
-}
-p#score{
-    right: 85px;
-}
-p#hscore{
-    left: 85px;
 }
