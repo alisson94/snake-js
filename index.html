@@ -68,13 +68,15 @@
             const { data } = await axios.get('https://snake-js-a6bef.firebaseio.com/players.json')
             
             for (const player of data) {
-                if(player.nome === inputName){
-                    nome = player.nome
-                    pontuacao = player.score
-                    init()
+                if(player){
+                    if(player.nome === inputName){
+                        nome = player.nome
+                        pontuacao = player.score
+                        init()
                     return
+                    }
                 }
-                console.log(player)
+                
             }
 
             data.push({
@@ -82,6 +84,10 @@
                 score: 0
             })
             await axios.put('https://snake-js-a6bef.firebaseio.com/players.json', data)
+
+            nome = inputName
+            pontuacao = 0
+            init()
         }
 
         function init() {
@@ -244,10 +250,12 @@
 
                 const { data } = await axios.get('https://snake-js-a6bef.firebaseio.com/players.json')
                 for (const player of data) {
-                    if(player.nome === nome){
-                        player.score = parseInt(hscore.innerHTML)
-                        pontuacao = parseInt(hscore.innerHTML)
-                        break
+                    if(player){
+                        if(player.nome === nome){
+                            player.score = parseInt(hscore.innerHTML)
+                            pontuacao = parseInt(hscore.innerHTML)
+                            break
+                        }
                     }
                 }
 
