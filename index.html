@@ -99,9 +99,6 @@
             document.querySelector('#hscore').innerHTML = pontuacao
             document.querySelector('#nome').innerHTML = nome
 
-            comidaX = Math.floor(Math.random() * 34) * 15
-            comidaY = Math.floor(Math.random() * 23) * 15
-
             s = []
             tamanho = 15
             direcao = 'direita'
@@ -112,8 +109,20 @@
                     direcao: 'direita'
                 }
             }
+
+            gerarPosicaoComida()
         }
 
+        function gerarPosicaoComida() {
+            comidaX = Math.floor(Math.random() * 34) * 15
+            comidaY = Math.floor(Math.random() * 23) * 15
+
+            for (const parte of s) {
+                if(parte.x == comidaX && parte.y == comidaY){
+                    gerarPosicaoComida()
+                }
+            }
+        }
 
         function apertou(e) {
 
@@ -218,8 +227,8 @@
 
         function comeu() {
             if (s[0].x == comidaX && s[0].y == comidaY) {
-                comidaX = Math.floor(Math.random() * 33) * 15
-                comidaY = Math.floor(Math.random() * 22) * 15
+                
+                gerarPosicaoComida()
                 aumentarPontuacao();
 
                 var ultimo = s[s.length - 1]
