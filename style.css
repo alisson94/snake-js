@@ -14,6 +14,10 @@ div.container{
     width: 510px;
 }
 
+.containerGame{
+    display: none;
+}
+
 canvas{
     border: 1px solid black;
 }
@@ -65,5 +69,5 @@ div.gameOver{
     padding: 20px;
     background: white;
     left: 30%;
-    opacity: 0;
+    display: none;
 }

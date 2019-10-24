@@ -10,26 +10,35 @@
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
-<body onload="init()">
+<body>
     <div class="container">
-        <div class="header">
-            <div>
-                <p>Score</p>
-                <p id="score">0</p>
+        <div class="containerGame">
+            <div class="header">
+                <p id="nome">nome</p>
+                <div>
+                    <p>Score</p>
+                    <p id="score">0</p>
+                </div>
+                <div>
+                    <p>High Score</p>
+                    <p id="hscore">0</p>
+                </div>
             </div>
-            <div>
-                <p>High Score</p>
-                <p id="hscore">0</p>
+            <canvas id="c" width="510px" height="345px"></canvas>
+    
+            <div class="buttonsContainer">
+                <div id="button1" class="button" onclick="apertouBotaoVirtual('38')"></div>
+                <div id="button2" class="button" onclick="apertouBotaoVirtual('37')"></div>
+                <div id="button3" class="button" onclick="apertouBotaoVirtual('39')"></div>
+                <div id="button4" class="button" onclick="apertouBotaoVirtual('40')"></div>
             </div>
         </div>
-        <canvas id="c" width="510px" height="345px"></canvas>
 
-        <div class="buttonsContainer">
-            <div id="button1" class="button" onclick="apertouBotaoVirtual('38')"></div>
-            <div id="button2" class="button" onclick="apertouBotaoVirtual('37')"></div>
-            <div id="button3" class="button" onclick="apertouBotaoVirtual('39')"></div>
-            <div id="button4" class="button" onclick="apertouBotaoVirtual('40')"></div>
+        <div class="containerBody">
+            <input id="inputName" type="text" placeholder="Seu nome">
+            <button onclick="handleButtonInit()">Iniciar</button>
         </div>
+
     </div>
 
     <div class="gameOver">
@@ -40,8 +49,8 @@
     <script>
         var c = document.getElementById('c')
         var ctx = c.getContext('2d')
-        var intervalo = setInterval(loop, 75)
-        addEventListener('keydown', apertou)
+        // var intervalo = setInterval(loop, 75)
+        let intervalo
 
         var comidaX
         var comidaY
@@ -50,7 +59,40 @@
         var tamanho
         var direcao
 
+        let nome
+        let pontuacao
+
+
+        async function handleButtonInit() {
+            const inputName = document.querySelector('#inputName').value
+            const { data } = await axios.get('https://snake-js-a6bef.firebaseio.com/players.json')
+            
+            for (const player of data) {
+                if(player.nome === inputName){
+                    nome = player.nome
+                    pontuacao = player.score
+                    init()
+                    return
+                }
+                console.log(player)
+            }
+
+            data.push({
+                nome: inputName,
+                score: 0
+            })
+            await axios.put('https://snake-js-a6bef.firebaseio.com/players.json', data)
+        }
+
         function init() {
+            addEventListener('keydown', apertou)
+            intervalo = setInterval(loop, 75)
+
+            document.querySelector('.containerGame').style.display = 'block'
+            document.querySelector('.containerBody').style.display = 'none'
+            document.querySelector('#hscore').innerHTML = pontuacao
+            document.querySelector('#nome').innerHTML = nome
+
             comidaX = Math.floor(Math.random() * 34) * 15
             comidaY = Math.floor(Math.random() * 23) * 15
 
@@ -65,6 +107,7 @@
                 }
             }
         }
+
 
         function apertou(e) {
 
@@ -104,8 +147,8 @@
             ctx.clearRect(0, 0, c.width, c.height)
 
             comeu()
-            mover()
             seMordeu()
+            mover()
 
             ctx.fillStyle = 'red'
             ctx.fillRect(comidaX, comidaY, tamanho, tamanho);
@@ -134,6 +177,7 @@
                                 s[i].y -= tamanho
                             } else {
                                 gameOver()
+                                break
                             }
                             break
                         case 'baixo':
@@ -141,6 +185,7 @@
                                 s[i].y += tamanho
                             } else {
                                 gameOver()
+                                break
                             }
                             break
                         case 'direita':
@@ -148,6 +193,7 @@
                                 s[i].x += tamanho
                             } else {
                                 gameOver()
+                                break
                             }
 
                             break
@@ -156,6 +202,7 @@
                                 s[i].x -= tamanho
                             } else {
                                 gameOver()
+                                break
                             }
                             break
                     }
@@ -188,25 +235,38 @@
             }
         }
 
-        function aumentarPontuacao() {
-            var p = document.querySelector('p#score')
-            var mp = document.querySelector('p#hscore')
-            p.innerText = parseInt(p.innerText) + 10
-            if (parseInt(p.innerText) > parseInt(mp.innerText)) {
-                mp.innerText = p.innerText
+        async function aumentarPontuacao() {
+            var score = document.querySelector('p#score')
+            var hscore = document.querySelector('p#hscore')
+            score.innerText = parseInt(score.innerText) + 10
+            if (parseInt(score.innerText) > parseInt(hscore.innerText)) {
+                hscore.innerText = score.innerText
+
+                const { data } = await axios.get('https://snake-js-a6bef.firebaseio.com/players.json')
+                for (const player of data) {
+                    if(player.nome === nome){
+                        player.score = parseInt(hscore.innerHTML)
+                        pontuacao = parseInt(hscore.innerHTML)
+                        break
+                    }
+                }
+
+                await axios.put('https://snake-js-a6bef.firebaseio.com/players.json', data)
             }
 
         }
 
         function gameOver() {
-
-            tamanho = 0
-            document.querySelector('div.gameOver').style.opacity = 1
+            clearInterval(intervalo)
+            tamanho = 0  // ISSO É O Q DEIXA INVISIVEL AO MORRER
+            document.querySelector('div.gameOver').style.display = 'block'
         }
+
         function reiniciar() {
             init()
+
             document.querySelector('p#score').innerText = 0
-            document.querySelector('div.gameOver').style.opacity = 0
+            document.querySelector('div.gameOver').style.display = 'none'            
         }
 
     </script>
