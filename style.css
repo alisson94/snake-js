@@ -4,14 +4,14 @@
     outline: 0;
 }
 
-div.container{
+div.container-root{
     top: 0%;
     bottom: 0%;
     left: 0%;
     right: 0%;
     margin: auto;
     position: absolute;
-    width: 510px;
+    width: 512px;
 }
 
 .containerGame{
@@ -32,14 +32,14 @@ canvas{
         margin-top: 150px;
         display: grid;
         justify-content: center;
-        grid-template-columns: 80px 80px 80px;
-        grid-template-rows: 80px 80px 80px;
+        grid-template-columns: 90px 90px 90px;
+        grid-template-rows: 90px 90px 90px;
         grid-gap: -5px;
     }
     
     .button{
-        width: 90px;
-        height: 90px;
+        width: 100px;
+        height: 100px;
         background-color: crimson;
         border-radius: 20px;
     }
@@ -58,9 +58,26 @@ canvas{
     
     #button4{
         grid-column: 2/2;
+        grid-row: 2/2;
     }
 }
 
+.containerBody{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.containerBody button{
+    margin-top: 10px;
+    width: 100px;
+}
+
+.containerBody table {
+    margin-top: 30px;
+}
 
 div.gameOver{
     font: normal 15pt Arial;

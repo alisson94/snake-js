@@ -1,17 +1,20 @@
+<!-- AUTOR: Álisson Santana as119459@gmail.com -->
 <!DOCTYPE html>
 <html>
-
+    
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>SnakeJS</title>
-    <meta name='viewport' content='width=514px, user-scalable=no'>
+    <meta name='viewport' content='width=512px, user-scalable=no'>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
-<body>
-    <div class="container">
+<body onload="gerarLista()">
+    <div class="container-root">
         <div class="containerGame">
             <div class="header">
                 <p id="nome">nome</p>
@@ -35,21 +38,34 @@
         </div>
 
         <div class="containerBody">
-            <input id="inputName" type="text" placeholder="Seu nome">
-            <button onclick="handleButtonInit()">Iniciar</button>
+            <h1>Snake</h1>
+            <input class="form-control" id="inputName" type="text" placeholder="Seu nome">
+            <button class="btn btn-primary" onclick="handleButtonInit()">Iniciar</button>
+
+            <table class="table table-striped">
+                <thead class="bg-success text-white">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Pontuação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                </table>
         </div>
 
     </div>
 
     <div class="gameOver">
         <h1>Game Over</h1><br>
-        <button onclick="reiniciar()">Reiniciar</button>
+        <button class="btn btn-primary" onclick="reiniciar()">Reiniciar</button>
     </div>
 
     <script>
         var c = document.getElementById('c')
         var ctx = c.getContext('2d')
-        // var intervalo = setInterval(loop, 75)
+        
         let intervalo
 
         var comidaX
@@ -62,10 +78,34 @@
         let nome
         let pontuacao
 
+        let data = null
+
+        async function gerarLista() {
+            const response = await axios.get('https://snake-js-a6bef.firebaseio.com/players.json')
+            data = response.data
+
+            data.sort((a, b) => b.score - a.score)
+
+            let contador = 1
+            for (const player of data) {
+                renderizarLista(player, contador++)
+            }
+        }
+
+        function renderizarLista(player, contador) {
+            const table = document.querySelector('.containerBody table')
+            const tr = document.createElement('tr')
+
+            tr.innerHTML = ` <th>${contador}</th> <td>${player.nome}</td> <td>${player.score}</td> `
+
+            table.appendChild(tr)
+        }
 
         async function handleButtonInit() {
             const inputName = document.querySelector('#inputName').value
-            const { data } = await axios.get('https://snake-js-a6bef.firebaseio.com/players.json')
+            if(!inputName){
+                return
+            }
             
             for (const player of data) {
                 if(player){
@@ -257,7 +297,6 @@
             if (parseInt(score.innerText) > parseInt(hscore.innerText)) {
                 hscore.innerText = score.innerText
 
-                const { data } = await axios.get('https://snake-js-a6bef.firebaseio.com/players.json')
                 for (const player of data) {
                     if(player){
                         if(player.nome === nome){
