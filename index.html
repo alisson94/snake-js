@@ -84,11 +84,17 @@
             const response = await axios.get('https://snake-js-a6bef.firebaseio.com/players.json')
             data = response.data
 
-            data.sort((a, b) => b.score - a.score)
+            data.sort((a, b) => {
+                if(a && b){
+                    return b.score - a.score
+                }
+            })
 
             let contador = 1
             for (const player of data) {
-                renderizarLista(player, contador++)
+                if(player){
+                    renderizarLista(player, contador++)
+                }
             }
         }
 
